@@ -8,8 +8,17 @@ namespace EntityFrameworkCore.Domain.Entities
 {
     public class Employee : Person
     {
-        public Role Role { get; set; } // Employee/manager/boss
-        public Employee Manager { get; set; }
+        public Role? Role { get; set; } // Employee/manager/boss
+
+        //Self reference
+        public int? ManagerId { get; set; }
+        public Employee? Manager { get; set; }
+
+        public ICollection<Employee> Subordinates { get; set; } = new List<Employee>();
+
+        //Organization
+        public int OrganizationId { get; set; }
+        public Organization Organization { get; set; }
     }
 
     public enum Role { 

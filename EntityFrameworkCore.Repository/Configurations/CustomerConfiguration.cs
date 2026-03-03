@@ -18,6 +18,17 @@ namespace EntityFrameworkCore.Repository.Configurations
             builder.Property(_ => _.LastName).IsRequired();
             builder.Property(_ => _.Type).IsRequired();
             builder.Property(_ => _.CreatedDate).IsRequired();
+
+            builder
+            .HasOne(c => c.Organization)
+            .WithMany(o => o.Customers)
+            .HasForeignKey(c => c.OrganizationId);
+
+            builder
+                .HasOne(c => c.Address)
+                .WithMany()
+                .HasForeignKey(c => c.AddressId)
+                .IsRequired(false);
         }
     }
 }

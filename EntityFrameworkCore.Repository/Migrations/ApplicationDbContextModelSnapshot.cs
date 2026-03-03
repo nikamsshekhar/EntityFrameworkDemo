@@ -47,7 +47,7 @@ namespace EntityFrameworkCore.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("EntityFrameworkCore.Domain.Entities.Customer", b =>
@@ -58,7 +58,7 @@ namespace EntityFrameworkCore.Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressId")
+                    b.Property<int?>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
@@ -72,7 +72,7 @@ namespace EntityFrameworkCore.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OrganizationId")
+                    b.Property<int>("OrganizationId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -102,7 +102,7 @@ namespace EntityFrameworkCore.Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressId")
+                    b.Property<int?>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
@@ -118,13 +118,13 @@ namespace EntityFrameworkCore.Repository.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("ManagerId")
+                    b.Property<int?>("ManagerId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OrganizationId")
+                    b.Property<int>("OrganizationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Role")
+                    b.Property<int?>("Role")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -153,7 +153,7 @@ namespace EntityFrameworkCore.Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressId")
+                    b.Property<int?>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
@@ -184,49 +184,55 @@ namespace EntityFrameworkCore.Repository.Migrations
                 {
                     b.HasOne("EntityFrameworkCore.Domain.Entities.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId")
+                        .HasForeignKey("AddressId");
+
+                    b.HasOne("EntityFrameworkCore.Domain.Entities.Organization", "Organization")
+                        .WithMany("Customers")
+                        .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EntityFrameworkCore.Domain.Entities.Organization", null)
-                        .WithMany("Customers")
-                        .HasForeignKey("OrganizationId");
-
                     b.Navigation("Address");
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("EntityFrameworkCore.Domain.Entities.Employee", b =>
                 {
                     b.HasOne("EntityFrameworkCore.Domain.Entities.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AddressId");
 
                     b.HasOne("EntityFrameworkCore.Domain.Entities.Employee", "Manager")
-                        .WithMany()
+                        .WithMany("Subordinates")
                         .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("EntityFrameworkCore.Domain.Entities.Organization", null)
+                    b.HasOne("EntityFrameworkCore.Domain.Entities.Organization", "Organization")
                         .WithMany("Employees")
-                        .HasForeignKey("OrganizationId");
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Address");
 
                     b.Navigation("Manager");
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("EntityFrameworkCore.Domain.Entities.Organization", b =>
                 {
                     b.HasOne("EntityFrameworkCore.Domain.Entities.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AddressId");
 
                     b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("EntityFrameworkCore.Domain.Entities.Employee", b =>
+                {
+                    b.Navigation("Subordinates");
                 });
 
             modelBuilder.Entity("EntityFrameworkCore.Domain.Entities.Organization", b =>

@@ -16,11 +16,26 @@ namespace EntityFrameworkCore.Repository.Configurations
             builder.HasKey(_ => _.Id);
             builder.Property(_ => _.FirstName).IsRequired().HasMaxLength(50);
             builder.Property(_ => _.LastName).IsRequired().HasMaxLength(50);
-            builder.HasOne(_ => _.Manager)
-                .WithMany()
-                .HasForeignKey("ManagerId")
+
+            // Self-referencing relationship
+            builder
+                .HasOne(e => e.Manager)
+                .WithMany(e => e.Subordinates)
+                .HasForeignKey(e => e.ManagerId)
                 .OnDelete(DeleteBehavior.Restrict);
-            //builder.Property(_ => _.Address).IsRequired();
+
+            // Organization relationship
+            builder
+                .HasOne(e => e.Organization)
+                .WithMany(o => o.Employees)
+                .HasForeignKey(e => e.OrganizationId);
+
+            // Address
+            builder
+                .HasOne(e => e.Address)
+                .WithMany()
+                .HasForeignKey(e => e.AddressId)
+                .IsRequired(false);
         }
     }
 }

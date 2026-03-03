@@ -16,8 +16,13 @@ namespace EntityFrameworkCore.Repository.Configurations
             builder.HasKey(_ => _.Id);
             builder.Property(_ => _.Name).IsRequired();
             builder.Property(_ => _.PAN).IsRequired();
-            //builder.Property(_ => _.Address).IsRequired();
             builder.Property(_ => _.CreatedDate).IsRequired();
+
+            builder
+            .HasOne(o => o.Address)
+            .WithMany()
+            .HasForeignKey(o => o.AddressId)
+            .IsRequired(false);
         }
     }
 }

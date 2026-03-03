@@ -9,6 +9,10 @@ namespace EntityFrameworkCore.Domain.Entities
     public class Customer : Person
     {
         public CustomerType Type { get; set; }
+
+        //Organization
+        public int OrganizationId { get; set; }
+        public Organization Organization { get; set; }
     }
 
     public enum CustomerType

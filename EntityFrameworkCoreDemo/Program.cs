@@ -1,5 +1,6 @@
 using EntityFrameworkCore.Domain.Interfaces;
 using EntityFrameworkCore.Repository;
+using EntityFrameworkCoreDemo.Mappings;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,9 @@ namespace EntityFrameworkCoreDemo
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+            builder.Services.AddAutoMapper(typeof(EmployeeProfile).Assembly);
+
 
             // Add Entity Framework
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -31,6 +35,15 @@ namespace EntityFrameworkCoreDemo
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseCors((builder) => {
+                builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
+            });
 
             app.UseHttpsRedirection();
 

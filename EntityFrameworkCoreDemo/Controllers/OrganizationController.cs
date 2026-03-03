@@ -1,52 +1,82 @@
-﻿using EntityFrameworkCore.Domain.Entities;
+﻿using AutoMapper;
 using EntityFrameworkCore.Domain.Interfaces;
+using EntityFrameworkCoreDemo.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EntityFrameworkCoreDemo.Controllers
 {
-    [Route("api/organizations")]
-    public class OrganizationController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class OrganizationController : ControllerBase
     {
-        
-        private readonly IUnitOfWork _unitOfWork;
 
-        public OrganizationController(IUnitOfWork unitOfWork)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+
+        public OrganizationController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork=unitOfWork;
+            _mapper=mapper;
         }
 
-        [Route("/")]
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok();
+            var organizations = await _unitOfWork.OrganizationRespository.GetAllAsync();
+            return Ok(organizations);
         }
 
-        [Route("/{id}")]
-        [HttpGet]
-        public IActionResult Get(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
         {
-            return Ok();
+            var organization = await _unitOfWork.OrganizationRespository.GetByIdAsync(id);
+            return Ok(organization);
         }
 
-        [Route("/")]
         [HttpPost]
-        public IActionResult Create([FromBody]Organization organization)
+        public async Task<IActionResult> Create([FromBody] Organization organization)
         {
-            return Ok();
+            var domainOrganization = _mapper.Map<EntityFrameworkCore.Domain.Entities.Organization>(organization);
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                domainOrganization.CreatedDate = DateTime.UtcNow;
+                domainOrganization = await _unitOfWork.OrganizationRespository.AddAsync(domainOrganization);
+                await _unitOfWork.CommitTransactionAsync();
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                throw;
+            }
+
+            return Ok(_mapper.Map<Models.OrganizationResponse>(domainOrganization));
         }
 
-        [Route("/{id}")]
-        [HttpPut]
-        public IActionResult Update(int id, [FromBody]Organization organization)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] Organization organization)
         {
-            return Ok();
+            //if (organization.Id != id)
+            //    throw new Exception("id from url should match with organizations id in request");
+            var domainOrganization = _mapper.Map<EntityFrameworkCore.Domain.Entities.Organization>(organization);
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                domainOrganization = await _unitOfWork.OrganizationRespository.UpdateAsync(domainOrganization);
+                await _unitOfWork.CommitTransactionAsync();
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                throw;
+            }
+            return Ok(_mapper.Map<Models.OrganizationResponse>(domainOrganization));
         }
 
-        [Route("/{id}")]
-        [HttpDelete]
-        public IActionResult Delete(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
+            await _unitOfWork.OrganizationRespository.DeleteAsync(id);
             return Ok();
         }
     }

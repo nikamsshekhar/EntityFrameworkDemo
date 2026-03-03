@@ -18,14 +18,17 @@ namespace EntityFrameworkCore.Repository
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Address> Addresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            //base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfiguration(new OrganizationConfiguration());
-            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
-            modelBuilder.ApplyConfiguration(new CustomerConfiguration());
+            //modelBuilder.ApplyConfiguration(new OrganizationConfiguration());
+            //modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+            //modelBuilder.ApplyConfiguration(new CustomerConfiguration());
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
     }
 }

@@ -11,60 +11,60 @@ GO
 BEGIN TRANSACTION;
 GO
 
-CREATE TABLE [Address] (
+CREATE TABLE [Addresses] (
     [Id] int NOT NULL IDENTITY,
     [AddressLine1] nvarchar(max) NOT NULL,
     [AddressLine2] nvarchar(max) NOT NULL,
     [City] nvarchar(max) NOT NULL,
     [PinCode] int NOT NULL,
-    CONSTRAINT [PK_Address] PRIMARY KEY ([Id])
+    CONSTRAINT [PK_Addresses] PRIMARY KEY ([Id])
 );
 GO
 
 CREATE TABLE [Organizations] (
     [Id] int NOT NULL IDENTITY,
     [Name] nvarchar(max) NOT NULL,
-    [AddressId] int NOT NULL,
     [Phone] int NOT NULL,
     [PAN] nvarchar(max) NOT NULL,
+    [AddressId] int NULL,
     [CreatedDate] datetime2 NOT NULL,
     [UpdatedDate] datetime2 NULL,
     CONSTRAINT [PK_Organizations] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_Organizations_Address_AddressId] FOREIGN KEY ([AddressId]) REFERENCES [Address] ([Id]) ON DELETE CASCADE
+    CONSTRAINT [FK_Organizations_Addresses_AddressId] FOREIGN KEY ([AddressId]) REFERENCES [Addresses] ([Id])
 );
 GO
 
 CREATE TABLE [Customers] (
     [Id] int NOT NULL IDENTITY,
     [Type] int NOT NULL,
-    [OrganizationId] int NULL,
+    [OrganizationId] int NOT NULL,
     [CreatedDate] datetime2 NOT NULL,
     [UpdatedDate] datetime2 NULL,
     [FirstName] nvarchar(max) NOT NULL,
     [LastName] nvarchar(max) NOT NULL,
     [Title] nvarchar(max) NOT NULL,
-    [AddressId] int NOT NULL,
+    [AddressId] int NULL,
     CONSTRAINT [PK_Customers] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_Customers_Address_AddressId] FOREIGN KEY ([AddressId]) REFERENCES [Address] ([Id]) ON DELETE CASCADE,
-    CONSTRAINT [FK_Customers_Organizations_OrganizationId] FOREIGN KEY ([OrganizationId]) REFERENCES [Organizations] ([Id])
+    CONSTRAINT [FK_Customers_Addresses_AddressId] FOREIGN KEY ([AddressId]) REFERENCES [Addresses] ([Id]),
+    CONSTRAINT [FK_Customers_Organizations_OrganizationId] FOREIGN KEY ([OrganizationId]) REFERENCES [Organizations] ([Id]) ON DELETE CASCADE
 );
 GO
 
 CREATE TABLE [Employees] (
     [Id] int NOT NULL IDENTITY,
-    [Role] int NOT NULL,
-    [ManagerId] int NOT NULL,
-    [OrganizationId] int NULL,
+    [Role] int NULL,
+    [ManagerId] int NULL,
+    [OrganizationId] int NOT NULL,
     [CreatedDate] datetime2 NOT NULL,
     [UpdatedDate] datetime2 NULL,
     [FirstName] nvarchar(50) NOT NULL,
     [LastName] nvarchar(50) NOT NULL,
     [Title] nvarchar(max) NOT NULL,
-    [AddressId] int NOT NULL,
+    [AddressId] int NULL,
     CONSTRAINT [PK_Employees] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_Employees_Address_AddressId] FOREIGN KEY ([AddressId]) REFERENCES [Address] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_Employees_Addresses_AddressId] FOREIGN KEY ([AddressId]) REFERENCES [Addresses] ([Id]),
     CONSTRAINT [FK_Employees_Employees_ManagerId] FOREIGN KEY ([ManagerId]) REFERENCES [Employees] ([Id]) ON DELETE NO ACTION,
-    CONSTRAINT [FK_Employees_Organizations_OrganizationId] FOREIGN KEY ([OrganizationId]) REFERENCES [Organizations] ([Id])
+    CONSTRAINT [FK_Employees_Organizations_OrganizationId] FOREIGN KEY ([OrganizationId]) REFERENCES [Organizations] ([Id]) ON DELETE CASCADE
 );
 GO
 
@@ -87,7 +87,7 @@ CREATE INDEX [IX_Organizations_AddressId] ON [Organizations] ([AddressId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20260303114136_InitialCreate', N'8.0.24');
+VALUES (N'20260303174303_InitialCreate', N'8.0.24');
 GO
 
 COMMIT;

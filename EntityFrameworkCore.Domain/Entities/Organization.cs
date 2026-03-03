@@ -10,11 +10,13 @@ namespace EntityFrameworkCore.Domain.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public Address Address { get; set; }
         public int Phone { get; set; }
         public string PAN { get; set; }
 
-        public List<Employee> Employees { get; set; }
-        public List<Customer> Customers { get; set; }
+        public int? AddressId { get; set; }
+        public Address? Address { get; set; }
+
+        public ICollection<Employee> Employees { get; set; } = new List<Employee>();
+        public ICollection<Customer> Customers { get; set; } = new List<Customer>();
     }
 }

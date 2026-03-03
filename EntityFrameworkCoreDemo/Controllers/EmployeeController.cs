@@ -1,48 +1,49 @@
-﻿using EntityFrameworkCore.Domain.Entities;
+﻿using AutoMapper;
+using EntityFrameworkCore.Domain.Entities;
 using EntityFrameworkCore.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EntityFrameworkCoreDemo.Controllers
 {
-    public class EmployeeController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class EmployeeController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public EmployeeController(IUnitOfWork unitOfWork)
+        public EmployeeController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork=unitOfWork;
+            _mapper=mapper;
         }
 
-        [Route("/")]
         [HttpGet]
         public IActionResult GetAll()
         {
             return Ok();
         }
 
-        [Route("/{id}")]
-        [HttpGet]
+        [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             return Ok();
         }
 
-        [Route("/")]
         [HttpPost]
         public IActionResult Create([FromBody] Employee employee)
-        {
+        {   //TODO : Same as organization
             return Ok();
         }
 
-        [Route("/{id}")]
-        [HttpPut]
+        [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] Employee employee)
         {
+            //TODO : Same as organization
             return Ok();
         }
 
-        [Route("/{id}")]
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             return Ok();

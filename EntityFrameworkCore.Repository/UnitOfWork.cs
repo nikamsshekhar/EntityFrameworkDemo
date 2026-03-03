@@ -1,4 +1,6 @@
 ﻿using EntityFrameworkCore.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,41 +11,53 @@ namespace EntityFrameworkCore.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly ApplicationDbContext _context;
+        private IDbContextTransaction? _transaction;
 
         public UnitOfWork(ApplicationDbContext applicationDbContext)
         {
-            _applicationDbContext=applicationDbContext;
+            _context=applicationDbContext;
         }
-        public IOrganizationRepository OrganizationRespository => new OrganizationRepository(_applicationDbContext);
+        public IOrganizationRepository OrganizationRespository => new OrganizationRepository(_context);
 
-        public IEmployeeRespository EmployeeRespository => new EmployeeRespository(_applicationDbContext);
+        public IEmployeeRespository EmployeeRespository => new EmployeeRespository(_context);
 
-        public ICustomerRepository CustomerRespository => new CustomerRepository(_applicationDbContext);
+        public ICustomerRepository CustomerRespository => new CustomerRepository(_context);
 
-        public Task BeginTransactionAsync()
+        public async Task<int> SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            return await _context.SaveChangesAsync();
         }
 
-        public Task CommitTransactionAsync()
+        public async Task BeginTransactionAsync()
         {
-            throw new NotImplementedException();
+            _transaction = await _context.Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitTransactionAsync()
+        {
+            if (_transaction != null)
+            {
+                await _transaction.CommitAsync();
+                await _transaction.DisposeAsync();
+                _transaction = null;
+            }
+        }
+
+        public async Task RollbackTransactionAsync()
+        {
+            if (_transaction != null)
+            {
+                await _transaction.RollbackAsync();
+                await _transaction.DisposeAsync();
+                _transaction = null;
+            }
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
-        }
-
-        public Task RollbackTransactionAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<int> SaveChangesAsync()
-        {
-            throw new NotImplementedException();
+            _transaction?.Dispose();
+            _context.Dispose();
         }
     }
 }
