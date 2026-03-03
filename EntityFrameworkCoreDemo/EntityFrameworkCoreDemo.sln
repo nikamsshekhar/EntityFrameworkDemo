@@ -3,11 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFrameworkCoreDemo", "EntityFrameworkCoreDemo.csproj", "{70ED1946-1CD2-4F97-96BB-DF752E3C742C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFrameworkCoreDemo", "EntityFrameworkCoreDemo.csproj", "{70ED1946-1CD2-4F97-96BB-DF752E3C742C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFrameworkCore.Domain", "..\EntityFrameworkCore.Domain\EntityFrameworkCore.Domain.csproj", "{1FC08FA4-DE1C-47A8-8B34-C239EFB126DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFrameworkCore.Domain", "..\EntityFrameworkCore.Domain\EntityFrameworkCore.Domain.csproj", "{1FC08FA4-DE1C-47A8-8B34-C239EFB126DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFrameworkCore.Repository", "..\EntityFrameworkCore.Repository\EntityFrameworkCore.Repository.csproj", "{182D525B-6869-4C95-9E02-580E03534030}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFrameworkCore.Repository", "..\EntityFrameworkCore.Repository\EntityFrameworkCore.Repository.csproj", "{182D525B-6869-4C95-9E02-580E03534030}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{24C0D66A-EE22-43C5-8EFA-F5C4F362F864}"
+	ProjectSection(SolutionItems) = preProject
+		ef-migration-commmands.txt = ef-migration-commmands.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

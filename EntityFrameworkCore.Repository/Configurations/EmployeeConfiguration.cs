@@ -16,7 +16,11 @@ namespace EntityFrameworkCore.Repository.Configurations
             builder.HasKey(_ => _.Id);
             builder.Property(_ => _.FirstName).IsRequired().HasMaxLength(50);
             builder.Property(_ => _.LastName).IsRequired().HasMaxLength(50);
-            builder.Property(_ => _.Address).IsRequired();
+            builder.HasOne(_ => _.Manager)
+                .WithMany()
+                .HasForeignKey("ManagerId")
+                .OnDelete(DeleteBehavior.Restrict);
+            //builder.Property(_ => _.Address).IsRequired();
         }
     }
 }

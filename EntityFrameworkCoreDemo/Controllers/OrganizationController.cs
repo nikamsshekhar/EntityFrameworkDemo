@@ -7,6 +7,7 @@ namespace EntityFrameworkCoreDemo.Controllers
     [Route("api/organizations")]
     public class OrganizationController : Controller
     {
+        
         private readonly IUnitOfWork _unitOfWork;
 
         public OrganizationController(IUnitOfWork unitOfWork)

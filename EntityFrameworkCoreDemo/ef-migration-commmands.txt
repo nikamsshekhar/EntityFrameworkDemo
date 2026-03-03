@@ -1,0 +1,6 @@
+dotnet ef migrations add InitialCreate --project ..\EntityFrameworkCore.Repository\EntityFrameworkCore.Repository.csproj
+
+dotnet ef migrations script --output .\..\EntityFrameworkCore.Repository\Scripts\initialcreate.sql
+
+OR
+
