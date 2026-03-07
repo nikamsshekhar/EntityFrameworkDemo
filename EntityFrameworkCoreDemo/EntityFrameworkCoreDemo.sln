@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{24C0D66A-E
 		ef-migration-commmands.txt = ef-migration-commmands.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFrameworkCore.UnitTests", "..\EntityFrameworkCore.UnitTests\EntityFrameworkCore.UnitTests.csproj", "{AD88FCFC-8118-4156-800B-EE7E79384568}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{182D525B-6869-4C95-9E02-580E03534030}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{182D525B-6869-4C95-9E02-580E03534030}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{182D525B-6869-4C95-9E02-580E03534030}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD88FCFC-8118-4156-800B-EE7E79384568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD88FCFC-8118-4156-800B-EE7E79384568}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD88FCFC-8118-4156-800B-EE7E79384568}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD88FCFC-8118-4156-800B-EE7E79384568}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,29 @@
+{
+  "include": [
+    "[EntityFrameworkCore.Domain]*",
+    "[EntityFrameworkCore.Repository]*"
+  ],
+  "exclude": [
+    "[EntityFrameworkCore.UnitTests]*",
+    "[xunit*]*"
+  ],
+  "excludeByAttribute": [
+    "Obsolete",
+    "GeneratedCodeAttribute",
+    "CompilerGeneratedAttribute"
+  ],
+  "excludeByFile": [
+    "**/obj/**",
+    "**/bin/**",
+    "**/*.Designer.cs"
+  ],
+  "format": [
+    "json",
+    "lcov",
+    "opencover",
+    "cobertura"
+  ],
+  "outputDirectory": "coverage",
+  "mergeWith": "./coverage.json",
+  "useSourceLink": true
+}
