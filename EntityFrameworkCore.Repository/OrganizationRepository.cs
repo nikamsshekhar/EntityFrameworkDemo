@@ -1,5 +1,6 @@
 ﻿using EntityFrameworkCore.Domain.Entities;
 using EntityFrameworkCore.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace EntityFrameworkCore.Repository
 {
@@ -34,7 +35,9 @@ namespace EntityFrameworkCore.Repository
 
         public async Task<IEnumerable<Organization>> GetAllAsync()
         {
-            return _context.Organizations.ToList();
+            // EF Core provides an asynchronous ToListAsync helper. The previous implementation
+            // executed synchronously which meant the async/await keywords were unnecessary.
+            return await _context.Organizations.ToListAsync();
         }
 
         public async Task<Organization> GetByIdAsync(int id)

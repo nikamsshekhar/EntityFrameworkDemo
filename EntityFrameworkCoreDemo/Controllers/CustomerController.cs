@@ -1,4 +1,5 @@
-﻿using EntityFrameworkCore.Domain.Entities;
+﻿using AutoMapper;
+using EntityFrameworkCore.Domain.Entities;
 using EntityFrameworkCore.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,42 +10,59 @@ namespace EntityFrameworkCoreDemo.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public CustomerController(IUnitOfWork unitOfWork)
+        public CustomerController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork=unitOfWork;
+            _mapper=mapper;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok();
+            var customers = await _unitOfWork.CustomerRespository.GetAllAsync();
+            var result = _mapper.Map<List<Models.CustomerResponse>>(customers);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return Ok();
+            var customer = await _unitOfWork.CustomerRespository.GetByIdAsync(id);
+            if (customer == null)
+                return NotFound();
+
+            var result = _mapper.Map<Models.CustomerResponse>(customer);
+            return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Employee employee)
+        public async Task<IActionResult> Create([FromBody] Models.Customer customer)
         {
-            //TODO : Same as organization
-            return Ok();
+            var domainCustomer = _mapper.Map<EntityFrameworkCore.Domain.Entities.Customer>(customer);
+            domainCustomer.CreatedDate = DateTime.UtcNow;
+            domainCustomer = await _unitOfWork.CustomerRespository.AddAsync(domainCustomer);
+
+            return Ok(_mapper.Map<Models.CustomerResponse>(domainCustomer));
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Employee employee)
+        public async Task<IActionResult> Update(int id, [FromBody] Models.Customer customer)
         {
-            //TODO : Same as organization
-            return Ok();
+            var domainCustomer = _mapper.Map<EntityFrameworkCore.Domain.Entities.Customer>(customer);
+            domainCustomer = await _unitOfWork.CustomerRespository.UpdateAsync(domainCustomer);
+            return Ok(_mapper.Map<Models.CustomerResponse>(domainCustomer));
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return Ok();
+            var deleted = await _unitOfWork.CustomerRespository.DeleteAsync(id);
+            if (!deleted)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }

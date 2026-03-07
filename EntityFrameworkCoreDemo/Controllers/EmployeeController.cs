@@ -19,34 +19,50 @@ namespace EntityFrameworkCoreDemo.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok();
+            var employees = await _unitOfWork.EmployeeRespository.GetAllAsync();
+            var result = _mapper.Map<List<Models.EmployeeResponse>>(employees);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return Ok();
+            var employee = await _unitOfWork.EmployeeRespository.GetByIdAsync(id);
+            if (employee == null)
+                return NotFound();
+
+            var result = _mapper.Map<Models.EmployeeResponse>(employee);
+            return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Employee employee)
-        {   //TODO : Same as organization
-            return Ok();
+        public async Task<IActionResult> Create([FromBody] Models.Employee employee)
+        {
+            var domainEmployee = _mapper.Map<EntityFrameworkCore.Domain.Entities.Employee>(employee);
+            domainEmployee.CreatedDate = DateTime.UtcNow;
+            domainEmployee = await _unitOfWork.EmployeeRespository.AddAsync(domainEmployee);
+
+            return Ok(_mapper.Map<Models.EmployeeResponse>(domainEmployee));
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Employee employee)
+        public async Task<IActionResult> Update(int id, [FromBody] Models.Employee employee)
         {
-            //TODO : Same as organization
-            return Ok();
+            var domainEmployee = _mapper.Map<EntityFrameworkCore.Domain.Entities.Employee>(employee);
+            domainEmployee = await _unitOfWork.EmployeeRespository.UpdateAsync(domainEmployee);
+            return Ok(_mapper.Map<Models.EmployeeResponse>(domainEmployee));
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return Ok();
+            var deleted = await _unitOfWork.EmployeeRespository.DeleteAsync(id);
+            if (!deleted)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }
